@@ -1,0 +1,17 @@
+{
+  "name": "trymodule",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "trymodule": "./index.js"
+  },
+  "author": "Victor Bjelkholm <victorbjelkholm@gmail.com> (https://www.github.com/victorbjelkholm)",
+  "license": "MIT",
+  "dependencies": {
+    "npmi": "^1.0.1"
+  }
+}
