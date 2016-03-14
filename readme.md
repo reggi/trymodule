@@ -10,7 +10,13 @@ A simple cli tool for trying out different nodejs modules.
 
 ## Usage
 
-`trymodule colors` < downloads the module colors if needed, and starts a nodejs REPL with colors loaded in the current scope, ready for you to use.
+`trymodule colors`
+
+Downloads the module colors if needed, and starts a nodejs REPL with colors loaded in the current scope, ready for you to use.
+
+`trymodule colors lodash`
+
+Same as above but with many packages in one go!
 
 ## Remove installed packages
 
