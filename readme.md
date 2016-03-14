@@ -2,6 +2,8 @@
 
 A simple cli tool for trying out different nodejs modules.
 
+![trymodule demo](preview.gif)
+
 ## Installation
 
 `npm install -g trymodule`
