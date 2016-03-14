@@ -2,6 +2,7 @@
 var repl = require('repl')
 var npmi = require('npmi')
 var path = require('path')
+var colors = require('colors')
 
 const TRYMODULE_PATH = path.resolve((process.env.HOME || process.env.USERPROFILE), '.trymodule')
 
@@ -40,9 +41,15 @@ const loadPackage = (pkg) => {
   })
 }
 
+const logGreen = (msg) => {
+  console.log(colors.green(msg))
+}
+
 loadPackage(package_name).then((loadedPackage) => {
   const variable_friendly_package_name = package_name.replace('-', '_').replace('.', '_')
-  console.log(`Package '${package_name}' was loaded and assigned to '${variable_friendly_package_name}' in the current scope`)
+
+  logGreen(`Package '${package_name}' was loaded and assigned to '${variable_friendly_package_name}' in the current scope`)
+
   var replServer = repl.start({
     prompt: '> '
   })

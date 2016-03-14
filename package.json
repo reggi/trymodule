@@ -12,6 +12,7 @@
   "author": "Victor Bjelkholm <victorbjelkholm@gmail.com> (https://www.github.com/victorbjelkholm)",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.1.2",
     "npmi": "^1.0.1"
   }
 }
