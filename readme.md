@@ -24,6 +24,10 @@ If you have any questions, open a Github issue here:
 or feel free to contact me on Twitter here:
 [@VictorBjelkholm](https://twitter.com/VictorBjelkholm)
 
+## Inspiration
+
+Inspiration comes from a leiningen plugin called [lein-try](https://github.com/rkneufeld/lein-try) that allows you to try out clojure libraries without having to declare them in an existing project. Thanks to [@rkneufeld](https://github.com/rkneufeld) for the inspiration!
+
 ## License
 
 The MIT License (MIT)
