@@ -1,4 +1,4 @@
-## trymodule
+## trymodule [![Circle CI](https://circleci.com/gh/VictorBjelkholm/trymodule/tree/master.svg?style=svg)](https://circleci.com/gh/VictorBjelkholm/trymodule/tree/master)
 
 A simple cli tool for trying out different nodejs modules.
 
