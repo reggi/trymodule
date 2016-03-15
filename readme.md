@@ -30,7 +30,7 @@ You can set the environment variables for one session with `export TRYMODULE_PAT
 
 ## Remove installed packages
 
-trymodule uses `$HOME/.trymodule` for storing nodejs modules. Remove this folder to "clear" the cache
+trymodule uses `$HOME/.trymodule` by default for storing nodejs modules. Remove this folder to "clear" the cache
 
 ## Support / Help
 
