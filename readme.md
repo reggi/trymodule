@@ -18,6 +18,16 @@ Downloads the module colors if needed, and starts a nodejs REPL with colors load
 
 Same as above but with many packages in one go!
 
+## Configuration
+
+There are two environment variable you can use to customize trymodule.
+
+`TRYMODULE_PATH` for setting the path of where modules are stored. By default this is `$HOME/.trymodule` or `$USERPROFILE/.trymodule`
+
+`TRYMODULE_NONINTERACTIVE` for making trymodule not fire up the repl in the end. This is useful if you want to just install some packages for future use. By default this is undefined. Setting it to any value would make trymodule non-interactive.
+
+You can set the environment variables for one session with `export TRYMODULE_PATH=/usr/bin/trymodule` or for just one time by doing `TRYMOUDLE_PATH=/usr/bin/trymodule trymodule colors`.
+
 ## Remove installed packages
 
 trymodule uses `$HOME/.trymodule` for storing nodejs modules. Remove this folder to "clear" the cache
