@@ -18,5 +18,8 @@
   },
   "devDependencies": {
     "standard": "^6.0.8"
+  },
+  "engines": {
+    "node": ">=5.0.0"
   }
 }
