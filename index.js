@@ -4,7 +4,7 @@ var npmi = require('npmi')
 var path = require('path')
 var colors = require('colors')
 
-const TRYMODULE_PATH = path.resolve((process.env.HOME || process.env.USERPROFILE), '.trymodule')
+const TRYMODULE_PATH = process.env.TRYMODULE_PATH || path.resolve((process.env.HOME || process.env.USERPROFILE), '.trymodule')
 
 if (process.argv[2] === undefined) {
   throw new Error('You need to provide package name as first argument')
@@ -62,8 +62,10 @@ Promise.all(promises_for_installation).then((packages) => {
     return addPackageToObject(context, pkg)
   }, {})
   console.log('REPL started...')
-  var replServer = repl.start({
-    prompt: '> '
-  })
-  replServer.context = Object.assign(replServer.context, context_packages)
+  if (!process.env.TRYMODULE_NONINTERACTIVE) {
+    var replServer = repl.start({
+      prompt: '> '
+    })
+    replServer.context = Object.assign(replServer.context, context_packages)
+  }
 })
