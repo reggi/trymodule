@@ -3,8 +3,10 @@ var repl = require('repl')
 var npmi = require('npmi')
 var path = require('path')
 var colors = require('colors')
+var replHistory = require('repl.history')
 
 const TRYMODULE_PATH = process.env.TRYMODULE_PATH || path.resolve((process.env.HOME || process.env.USERPROFILE), '.trymodule')
+const TRYMODULE_HISTORY_PATH = process.env.TRYMODULE_HISTORY_PATH || path.resolve(TRYMODULE_PATH, 'repl_history')
 
 if (process.argv[2] === undefined) {
   throw new Error('You need to provide package name as first argument')
@@ -66,6 +68,7 @@ Promise.all(promises_for_installation).then((packages) => {
     var replServer = repl.start({
       prompt: '> '
     })
+    replHistory(replServer, TRYMODULE_HISTORY_PATH)
     replServer.context = Object.assign(replServer.context, context_packages)
   }
 })
