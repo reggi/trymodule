@@ -18,6 +18,10 @@ Downloads the module colors if needed, and starts a nodejs REPL with colors load
 
 Same as above but with many packages in one go!
 
+`trymodule --clear`
+
+Removes the directory where trymodules stores the node modules. Removes `TRYMODULE_PATH + '/node_modules'`
+
 ## Configuration
 
 There are a couple of environment variables you can use to customize trymodule.
@@ -29,10 +33,6 @@ There are a couple of environment variables you can use to customize trymodule.
 `TRYMODULE_HISTORY_PATH` for changing where to save the repl history. Should be pointing to a user write-able file. Defaults to `$TRYMODULE_PATH/repl_history`
 
 You can set the environment variables for one session with `export TRYMODULE_PATH=/usr/bin/trymodule` or for just one time by doing `TRYMOUDLE_PATH=/usr/bin/trymodule trymodule colors`.
-
-## Remove installed packages
-
-trymodule uses `$HOME/.trymodule` by default for storing nodejs modules. Remove this folder to "clear" the cache
 
 ## Support / Help
 
