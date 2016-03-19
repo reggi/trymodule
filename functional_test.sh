@@ -31,20 +31,28 @@ check_should_error()
   fi
 }
 
+# Install one package
 run_test "Can install package 'colors'" "./index.js colors"
 test -d $TEST_PATH/node_modules/colors
 check_failure "node_modules/colors was not installed"
 
+# Install two packages
 run_test "Can install packages 'colors' & 'lodash'" "./index.js colors lodash"
 test -d $TEST_PATH/node_modules/colors
 check_failure "node_modules/colors was not installed"
 test -d $TEST_PATH/node_modules/lodash
 check_failure "node_modules/lodash was not installed"
 
+# Can't install packages that doesn't exists
 run_test "Cannot install missing package 'coloursssss'" "./index.js coloursssss"
 test -d $TEST_PATH/node_modules/coloursssss
 check_should_error "node_modules/coloursssss was installed"
 echo "NOTE: Above error is normal and is fine, we're testing that we cannot install missing packages"
+
+# Clear cache
+run_test "Can clear the cache" "./index.js --clear"
+test -d $TEST_PATH/node_modules
+check_should_error "node_modules existed!"
 
 if [ $FAILED -eq 0 ]
 then

@@ -4,6 +4,7 @@ var npmi = require('npmi')
 var path = require('path')
 var colors = require('colors')
 var replHistory = require('repl.history')
+var exec = require('child_process').exec
 
 const TRYMODULE_PATH = process.env.TRYMODULE_PATH || path.resolve((process.env.HOME || process.env.USERPROFILE), '.trymodule')
 const TRYMODULE_HISTORY_PATH = process.env.TRYMODULE_HISTORY_PATH || path.resolve(TRYMODULE_PATH, 'repl_history')
@@ -53,22 +54,32 @@ const addPackageToObject = (obj, pkg) => {
   return obj
 }
 
-logGreen('Gonna start a REPL with packages installed and loaded for you')
+if (process.argv[2] === '--clear') {
+  console.log(`Removing folder ${TRYMODULE_PATH + '/node_modules'}`)
+  exec('rm -r ' + TRYMODULE_PATH + '/node_modules', (err, stdout, stderr) => {
+    if (!err) {
+      logGreen('Cache successfully cleared!')
+      process.exit(0)
+    } else {
+      throw new Error('Could not remove cache! Error ' + err)
+    }
+  })
+} else {
+  logGreen('Gonna start a REPL with packages installed and loaded for you')
+  const packages_to_install = takePackageArguments(process.argv)
+  const promises_for_installation = packages_to_install.map((package_name) => loadPackage(package_name))
 
-const packages_to_install = takePackageArguments(process.argv)
-
-const promises_for_installation = packages_to_install.map((package_name) => loadPackage(package_name))
-
-Promise.all(promises_for_installation).then((packages) => {
-  const context_packages = packages.reduce((context, pkg) => {
-    return addPackageToObject(context, pkg)
-  }, {})
-  console.log('REPL started...')
-  if (!process.env.TRYMODULE_NONINTERACTIVE) {
-    var replServer = repl.start({
-      prompt: '> '
-    })
-    replHistory(replServer, TRYMODULE_HISTORY_PATH)
-    replServer.context = Object.assign(replServer.context, context_packages)
-  }
-})
+  Promise.all(promises_for_installation).then((packages) => {
+    const context_packages = packages.reduce((context, pkg) => {
+      return addPackageToObject(context, pkg)
+    }, {})
+    console.log('REPL started...')
+    if (!process.env.TRYMODULE_NONINTERACTIVE) {
+      var replServer = repl.start({
+        prompt: '> '
+      })
+      replHistory(replServer, TRYMODULE_HISTORY_PATH)
+      replServer.context = Object.assign(replServer.context, context_packages)
+    }
+  })
+}
