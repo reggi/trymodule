@@ -47,7 +47,7 @@ const loadPackage = (pkg) => {
 }
 
 const addPackageToObject = (obj, pkg) => {
-  const variable_friendly_package_name = pkg.name.replace('-', '_').replace('.', '_')
+  const variable_friendly_package_name = pkg.name.replace(/-|\./g, '_')
   logGreen(`Package '${pkg.name}' was loaded and assigned to '${variable_friendly_package_name}' in the current scope`)
   obj[variable_friendly_package_name] = pkg.package
   return obj
