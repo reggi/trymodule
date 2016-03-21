@@ -1,6 +1,6 @@
 {
   "name": "trymodule",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "It's never been easier to try nodejs modules!",
   "main": "index.js",
   "scripts": {
