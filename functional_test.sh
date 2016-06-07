@@ -43,6 +43,10 @@ check_failure "node_modules/colors was not installed"
 test -d $TEST_PATH/node_modules/lodash
 check_failure "node_modules/lodash was not installed"
 
+# Install two packages and bind to custom variable names
+run_test "Can install packages 'colors' & 'lodash' as 'c' and '_'" "./cli.js colors=c lodash=_"
+check_failure "Could not assign to custom variable names"
+
 # Can't install packages that doesn't exists
 run_test "Cannot install missing package 'coloursssss'" "./cli.js coloursssss"
 test -d $TEST_PATH/node_modules/coloursssss
