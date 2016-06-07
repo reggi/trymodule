@@ -11,6 +11,18 @@ var loadPackages = require('./index')
 const TRYMODULE_PATH = process.env.TRYMODULE_PATH || path.resolve((os.homedir()), '.trymodule')
 const TRYMODULE_HISTORY_PATH = process.env.TRYMODULE_HISTORY_PATH || path.resolve(TRYMODULE_PATH, 'repl_history')
 
+const flags = [];
+const packages = [];
+
+process.argv.slice(2).forEach(arg => {
+  if(arg[0] === '-') {
+    // matches '--clear', '-v', etc
+    flags.push(arg);
+  } else {
+    packages.push(arg);
+  }
+})
+
 if (process.argv[2] === undefined) {
   throw new Error('You need to provide package name as first argument')
 }
