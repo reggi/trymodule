@@ -12,7 +12,7 @@ const TRYMODULE_PATH = process.env.TRYMODULE_PATH || path.resolve((os.homedir())
 const TRYMODULE_HISTORY_PATH = process.env.TRYMODULE_HISTORY_PATH || path.resolve(TRYMODULE_PATH, 'repl_history')
 
 const flags = [];
-const packages = []; // data looks like [moduleName, as]
+const packages = {}; // data looks like [moduleName, as]
 
 const makeVariableFriendly = str => str.replace(/-|\./g, '_')
 
@@ -25,14 +25,14 @@ process.argv.slice(2).forEach(arg => {
     const i = arg.indexOf('=')
     const module = arg.slice(0, i) // 'lodash'
     const as = arg.slice(i + 1) // '_'
-    packages.push([module, makeVariableFriendly(as)]) // ['lodash', '_']
+    packages[module] = makeVariableFriendly(as) // ['lodash', '_']
   } else {
     // assume it's just a regular module name: 'lodash', 'express', etc
-    packages.push([arg, makeVariableFriendly(arg)]) // call it the module's name
+    packages[arg] = makeVariableFriendly(arg) // call it the module's name
   }
 })
 
-if (!flags.length && !packages.length) {
+if (!flags.length && !Object.keys(packages).length) {
   throw new Error('You need to provide some arguments!')
 }
 

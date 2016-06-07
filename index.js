@@ -8,15 +8,15 @@ const packageLocation = (pkg, install_path) => {
   return path.resolve(install_path, 'node_modules', pkg)
 }
 
-const loadPackage = (pkg, install_path) => {
+const loadPackage = (moduleName, moduleAs, install_path) => {
   return new Promise((resolve, reject) => {
     try {
-      const loadedPackage = require(packageLocation(pkg[0], install_path))
-      console.log(colors.blue(`'${pkg[0]}' was already installed since before!`))
-      resolve({name: pkg[0], package: loadedPackage, as: pkg[1]})
+      const loadedPackage = require(packageLocation(moduleName, install_path))
+      console.log(colors.blue(`'${moduleName}' was already installed since before!`))
+      resolve({name: moduleName, package: loadedPackage, as: moduleAs})
     } catch (err) {
-      console.log(colors.yellow(`Couldn't find '${pkg[0]}' locally, gonna download it now`))
-      npmi({name: pkg[0], path: install_path}, (err, result) => {
+      console.log(colors.yellow(`Couldn't find '${moduleName}' locally, gonna download it now`))
+      npmi({name: moduleName, path: install_path}, (err, result) => {
         if (err) {
           console.log(colors.red(err.message))
           if (err.statusCode === 404) {
@@ -29,8 +29,8 @@ const loadPackage = (pkg, install_path) => {
             throw new Error('npm install error')
           }
         }
-        const loadedPackage = require(packageLocation(pkg[0], install_path))
-        resolve({name: pkg[0], package: loadedPackage, as: pkg[1]})
+        const loadedPackage = require(packageLocation(moduleName, install_path))
+        resolve({name: moduleName, package: loadedPackage, as: moduleAs})
       })
     }
   })
@@ -38,9 +38,11 @@ const loadPackage = (pkg, install_path) => {
 
 module.exports = (packages_to_install, install_path) => {
   return new Promise((resolve, reject) => {
-    const promises_for_installation = packages_to_install.map((pkg) => {
-      return loadPackage(pkg, install_path)
+    const promises_for_installation = [];
+    Object.keys(packages_to_install).forEach(moduleName => {
+      const as = packages_to_install[moduleName]
+      promises_for_installation.push(loadPackage(moduleName, as, install_path))
     })
-    Promise.all(promises_for_installation).then(resolve).catch(reject)
+      Promise.all(promises_for_installation).then(resolve).catch(reject)
   })
 }
