@@ -12,33 +12,41 @@ const TRYMODULE_PATH = process.env.TRYMODULE_PATH || path.resolve((os.homedir())
 const TRYMODULE_HISTORY_PATH = process.env.TRYMODULE_HISTORY_PATH || path.resolve(TRYMODULE_PATH, 'repl_history')
 
 const flags = [];
-const packages = [];
+const packages = []; // data looks like [moduleName, as]
+
+const makeVariableFriendly = str => str.replace(/-|\./g, '_')
 
 process.argv.slice(2).forEach(arg => {
   if(arg[0] === '-') {
-    // matches '--clear', '-v', etc
-    flags.push(arg);
+    // matches '--clear', etc
+    flags.push(arg)
+  } else if(arg.indexOf('=') > -1) {
+    // matches 'lodash=_', etc
+    const i = arg.indexOf('=')
+    const module = arg.slice(0, i) // 'lodash'
+    const as = arg.slice(i + 1) // '_'
+    packages.push([module, makeVariableFriendly(as)]) // ['lodash', '_']
   } else {
-    packages.push(arg);
+    // assume it's just a regular module name: 'lodash', 'express', etc
+    packages.push([arg, makeVariableFriendly(arg)]) // call it the module's name
   }
 })
 
-if (process.argv[2] === undefined) {
-  throw new Error('You need to provide package name as first argument')
+if (!flags.length && !packages.length) {
+  throw new Error('You need to provide some arguments!')
 }
 
 const logGreen = (msg) => console.log(colors.green(msg))
 
-const takePackageArguments = (args) => args.splice(2)
+const hasFlag = (flag) => flags.indexOf(flag) > -1
 
 const addPackageToObject = (obj, pkg) => {
-  const variable_friendly_package_name = pkg.name.replace(/-|\./g, '_')
-  logGreen(`Package '${pkg.name}' was loaded and assigned to '${variable_friendly_package_name}' in the current scope`)
-  obj[variable_friendly_package_name] = pkg.package
+  logGreen(`Package '${pkg.name}' was loaded and assigned to '${pkg.as}' in the current scope`)
+  obj[pkg.as] = pkg.package
   return obj
 }
 
-if (process.argv[2] === '--clear') {
+if (hasFlag('--clear')) {
   console.log(`Removing folder ${TRYMODULE_PATH + '/node_modules'}`)
   exec('rm -r ' + TRYMODULE_PATH + '/node_modules', (err, stdout, stderr) => {
     if (!err) {
@@ -50,10 +58,9 @@ if (process.argv[2] === '--clear') {
   })
 } else {
   logGreen('Gonna start a REPL with packages installed and loaded for you')
-  const packages_to_install = takePackageArguments(process.argv)
 
   // Extract
-  loadPackages(packages_to_install, TRYMODULE_PATH).then((packages) => {
+  loadPackages(packages, TRYMODULE_PATH).then((packages) => {
     const context_packages = packages.reduce((context, pkg) => {
       return addPackageToObject(context, pkg)
     }, {})
