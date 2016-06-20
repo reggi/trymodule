@@ -18,6 +18,10 @@ Downloads the module colors if needed, and starts a nodejs REPL with colors load
 
 Same as above but with many packages in one go!
 
+`trymodule colors=c lodash=_`
+
+Assign packages to custom variable names.
+
 `trymodule --clear`
 
 Removes the directory where trymodules stores the node modules. Removes `TRYMODULE_PATH + '/node_modules'`
