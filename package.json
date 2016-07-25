@@ -11,6 +11,7 @@
     "trymodule": "./cli.js"
   },
   "author": "Victor Bjelkholm <victorbjelkholm@gmail.com> (https://www.github.com/victorbjelkholm)",
+  "repository": "https://github.com/VictorBjelkholm/trymodule",
   "license": "MIT",
   "dependencies": {
     "colors": "^1.1.2",
