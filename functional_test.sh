@@ -13,6 +13,15 @@ run_test()
   $2
 }
 
+run_test_command()
+{
+  echo "--------------"
+  echo "## $1"
+  echo "## $2 ?= $3"
+  x=$(echo "$2" | ./cli.js colors | grep "$3")
+  [ "${x}" != "$3" ]
+}
+
 check_failure()
 {
   if [ $? -ne 0 ]
@@ -52,6 +61,26 @@ run_test "Cannot install missing package 'coloursssss'" "./cli.js coloursssss"
 test -d $TEST_PATH/node_modules/coloursssss
 check_should_error "node_modules/coloursssss was installed"
 echo "NOTE: Above error is normal and is fine, we're testing that we cannot install missing packages"
+
+# Check that Promises are detected
+run_test_command "Can detect that a Promise is NOT returned" "'OK_TOKEN'" "OK_TOKEN"
+check_failure "Incorrectly detected a Promise"
+
+run_test_command "Can detect that a Promise is returned" "new Promise(function(){})" "Returned a Promise. waiting for result..."
+check_failure "Could not detect a Promise"
+
+run_test_command "Can detect when a non-native Promise is returned" "{then: function() {}}" "Returned a Promise. waiting for result..."
+check_failure "Could not detect a non-native Promise"
+
+run_test_command "Can output the result of a Promise" "new Promise(function(resolve){ resolve('OK_TOKEN') })" "OK_TOKEN"
+check_failure "Did not output the result of a Promise"
+
+run_test_command "Can output the result of an async Promise (2 sec)" "new Promise(function(resolve){ setTimeout(function(){resolve('OK_TOKEN')}, 2000) })" "OK_TOKEN"
+check_failure "Did not output the result of an async Promise"
+
+run_test_command "Can output when a Promise is rejected" "new Promise(function(resolve, reject){ reject(new Error('REJECT_TOKEN')) })" "REJECT_TOKEN"
+check_failure "Did not output the result of a Promise"
+
 
 # Clear cache
 run_test "Can clear the cache" "./cli.js --clear"

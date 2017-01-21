@@ -5,6 +5,7 @@ var path = require('path')
 var os = require('os')
 var colors = require('colors')
 var replHistory = require('repl.history')
+var vm = require('vm')
 var exec = require('child_process').exec
 var loadPackages = require('./index')
 
@@ -67,7 +68,24 @@ if (hasFlag('--clear')) {
     console.log('REPL started...')
     if (!process.env.TRYMODULE_NONINTERACTIVE) {
       var replServer = repl.start({
-        prompt: '> '
+        prompt: '> ',
+        eval: function evalWithPromises(cmd, context, filename, callback) {
+          script = new vm.Script(cmd)
+          var result = script.runInContext(replServer.context)
+          // Some libraries use non-native Promise implementations
+          // (ie lib$es6$promise$promise$$Promise)
+          if (result instanceof Promise || (typeof result == 'object' && typeof result.then == 'function')) {
+            console.log('Returned a Promise. waiting for result...')
+            result.then(function(val) {
+              callback(null, val)
+            })
+            .catch(function(err) {
+              callback(err)
+            })
+          } else {
+            callback(null, result)
+          }
+        }
       })
       replHistory(replServer, TRYMODULE_HISTORY_PATH)
       replServer.context = Object.assign(replServer.context, context_packages)
