@@ -4,7 +4,7 @@
   "description": "It's never been easier to try nodejs modules!",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint;./functional_test.sh",
+    "test": "npm run lint && ./functional_test.sh",
     "lint": "standard"
   },
   "bin": {
