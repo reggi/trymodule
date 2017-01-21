@@ -12,16 +12,16 @@ var loadPackages = require('./index')
 const TRYMODULE_PATH = process.env.TRYMODULE_PATH || path.resolve((os.homedir()), '.trymodule')
 const TRYMODULE_HISTORY_PATH = process.env.TRYMODULE_HISTORY_PATH || path.resolve(TRYMODULE_PATH, 'repl_history')
 
-const flags = [];
-const packages = {}; // data looks like [moduleName, as]
+const flags = []
+const packages = {} // data looks like [moduleName, as]
 
 const makeVariableFriendly = str => str.replace(/-|\./g, '_')
 
 process.argv.slice(2).forEach(arg => {
-  if(arg[0] === '-') {
+  if (arg[0] === '-') {
     // matches '--clear', etc
     flags.push(arg)
-  } else if(arg.indexOf('=') > -1) {
+  } else if (arg.indexOf('=') > -1) {
     // matches 'lodash=_', etc
     const i = arg.indexOf('=')
     const module = arg.slice(0, i) // 'lodash'
@@ -62,24 +62,24 @@ if (hasFlag('--clear')) {
 
   // Extract
   loadPackages(packages, TRYMODULE_PATH).then((packages) => {
-    const context_packages = packages.reduce((context, pkg) => {
+    const contextPackages = packages.reduce((context, pkg) => {
       return addPackageToObject(context, pkg)
     }, {})
     console.log('REPL started...')
     if (!process.env.TRYMODULE_NONINTERACTIVE) {
       var replServer = repl.start({
         prompt: '> ',
-        eval: function evalWithPromises(cmd, context, filename, callback) {
-          script = new vm.Script(cmd)
+        eval: function evalWithPromises (cmd, context, filename, callback) {
+          const script = new vm.Script(cmd)
           var result = script.runInContext(replServer.context)
           // Some libraries use non-native Promise implementations
           // (ie lib$es6$promise$promise$$Promise)
-          if (result instanceof Promise || (typeof result == 'object' && typeof result.then == 'function')) {
+          if (result instanceof Promise || (typeof result === 'object' && typeof result.then === 'function')) {
             console.log('Returned a Promise. waiting for result...')
-            result.then(function(val) {
+            result.then(function (val) {
               callback(null, val)
             })
-            .catch(function(err) {
+            .catch(function (err) {
               callback(err)
             })
           } else {
@@ -88,7 +88,7 @@ if (hasFlag('--clear')) {
         }
       })
       replHistory(replServer, TRYMODULE_HISTORY_PATH)
-      replServer.context = Object.assign(replServer.context, context_packages)
+      replServer.context = Object.assign(replServer.context, contextPackages)
     }
   })
 }
