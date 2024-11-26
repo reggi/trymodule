@@ -4,7 +4,6 @@ var repl = require('repl')
 var path = require('path')
 var os = require('os')
 var colors = require('colors')
-var replHistory = require('repl.history')
 var vm = require('vm')
 var exec = require('child_process').exec
 var loadPackages = require('./index')
@@ -85,10 +84,15 @@ if (hasFlag('--clear')) {
           } else {
             callback(null, result)
           }
-        }
+        },
       })
-      replHistory(replServer, TRYMODULE_HISTORY_PATH)
-      replServer.context = Object.assign(replServer.context, contextPackages)
+      replServer.setupHistory(TRYMODULE_HISTORY_PATH, (err, repl) => {
+        if (err) {
+          console.error(err);
+        } else {
+          repl.context = Object.assign(repl.context, contextPackages);
+        }
+      });
     }
   })
 }
