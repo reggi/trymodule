@@ -1,5 +1,5 @@
 {
-  "name": "trymodule",
+  "name": "@reggi/trymodule",
   "version": "1.4.0",
   "description": "It's never been easier to try nodejs modules!",
   "main": "index.js",
